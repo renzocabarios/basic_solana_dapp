@@ -18,6 +18,7 @@ import {
   VaultSchema,
   VaultSchemaDefaults,
 } from "@/lib/schema/vault.schema";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 
 export default function Home() {
   const form = useForm<IVaultSchema>({
@@ -33,6 +34,9 @@ export default function Home() {
     <Form {...form}>
       <main className="flex min-h-screen flex-col items-center justify-center p-24">
         <div className="flex flex-col gap-4">
+          <div className="w-full flex justify-center">
+            <WalletMultiButton />
+          </div>
           <FormField
             control={form.control}
             name="amount"
@@ -57,3 +61,10 @@ export default function Home() {
     </Form>
   );
 }
+// pnpm add \
+//     @solana/wallet-adapter-base \
+//     @solana/wallet-adapter-react \
+//     @solana/wallet-adapter-react-ui \
+//     @solana/wallet-adapter-wallets \
+//     @solana/web3.js \
+//     react
