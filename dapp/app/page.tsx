@@ -19,6 +19,8 @@ import {
   VaultSchemaDefaults,
 } from "@/lib/schema/vault.schema";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import useDeposit from "@/hooks/useDeposit";
+import useWithdraw from "@/hooks/useWithdraw";
 
 export default function Home() {
   const form = useForm<IVaultSchema>({
@@ -26,8 +28,23 @@ export default function Home() {
     defaultValues: VaultSchemaDefaults,
   });
 
-  function onSubmit(values: IVaultSchema) {
-    console.log(values);
+  const { mutate: deposit, isPending: depositIsPending } = useDeposit();
+  const { mutate: withdraw, isPending: withdrawIsPending } = useWithdraw();
+
+  function onDeposit(values: IVaultSchema) {
+    deposit(values);
+  }
+
+  function onWithdraw(values: IVaultSchema) {
+    withdraw(values);
+  }
+
+  if (depositIsPending || withdrawIsPending) {
+    return (
+      <main className="flex min-h-screen flex-col items-center justify-center p-24">
+        <p>Transaction is pending...</p>
+      </main>
+    );
   }
 
   return (
@@ -53,18 +70,11 @@ export default function Home() {
           />
 
           <div className="flex items-center justify-between gap-4 w-full">
-            <Button onClick={form.handleSubmit(onSubmit)}>Deposit</Button>
-            <Button onClick={form.handleSubmit(onSubmit)}>Withdraw</Button>
+            <Button onClick={form.handleSubmit(onDeposit)}>Deposit</Button>
+            <Button onClick={form.handleSubmit(onWithdraw)}>Withdraw</Button>
           </div>
         </div>
       </main>
     </Form>
   );
 }
-// pnpm add \
-//     @solana/wallet-adapter-base \
-//     @solana/wallet-adapter-react \
-//     @solana/wallet-adapter-react-ui \
-//     @solana/wallet-adapter-wallets \
-//     @solana/web3.js \
-//     react
